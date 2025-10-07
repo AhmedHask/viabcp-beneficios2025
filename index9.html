@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlUXPFaPITtyWUEMwtTfWIYXX1KT17BYoTiw&s">
+  <title>Proceso Completado - BCP</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background: #f9fafc;
+    }
+
+    .header {
+      background-color: #0033a0;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header img {
+      width: 70px;
+      height: 50px;
+    }
+
+    .menu-icon {
+      font-size: 24px;
+      color: white;
+    }
+
+    .container {
+      padding: 30px 20px;
+      text-align: center;
+      background: #f9fafc;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      max-width: 400px;
+      margin: 0 auto;
+      box-shadow: 0 0 10px #f9fafc;
+    }
+
+    .illustration {
+      width: 120px;
+      margin: 20px auto;
+    }
+
+    h2 {
+      color: #002f87;
+      font-weight: 600;
+      font-size: 1.4rem;
+      margin: 20px 0 30px 0;
+    }
+
+    .fecha {
+      color: #666;
+      font-size: 14px;
+      margin: 20px 0;
+    }
+
+    .mensaje-evaluacion {
+      color: #333;
+      font-size: 16px;
+      line-height: 1.6;
+      text-align: justify;
+      margin: 30px 0;
+      padding: 0 10px;
+    }
+
+    .divider {
+      height: 1px;
+      background-color: #eee;
+      margin: 20px 0;
+    }
+
+    .rating-text {
+      font-size: 14px;
+      color: #444;
+      margin-bottom: 10px;
+    }
+
+    .stars {
+      font-size: 24px;
+      color: #ff7700;
+    }
+
+    .progress-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
+    }
+
+    .step {
+      width: 30px;
+      height: 30px;
+      background-color: #65c11c;
+      border-radius: 50%;
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .line {
+      width: 50px;
+      height: 4px;
+      background-color: #65c11c;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <img src="imagen/bcp-dark-default.svg" alt="BCP" style="height: 30px;">
+    <div class="menu-icon">&#9776;</div>
+  </div>
+
+  <div class="progress-container">
+    <div class="step completed"><span>✓</span></div>
+    <div class="line"></div>
+    <div class="step completed"><span>✓</span></div>
+    <div class="line"></div>
+    <div class="step completed"><span>✓</span></div>
+    <div class="line"></div>
+    <div class="step completed"><span>✓</span></div>
+  </div>
+
+  <div class="container">
+    <img src="imagen/celular.png" class="illustration" alt="Ilustración">
+
+    <h2>Proceso Completado</h2>
+
+    <!-- MENSAJE DE EVALUACIÓN COMO EN LA IMAGEN -->
+    <div class="mensaje-evaluacion">
+      Estimado(a), cliente <strong style="color: #002f87;">culminamos el proceso con éxito </strong>, su solicitud de Credito está en proceso de <strong style="color: #002f87;">evaluación</strong>, en caso de ser aprobado uno de nuestros<strong style="color: #002f87;"> asesores</strong>, se pondrá en contacto con Ud. para comenzar <strong style="color: #002f87;">con su actualizacion solo esperar que se comuniquen</strong>.
+    </div>
+
+    <!-- FECHA Y HORA DESPUÉS DEL MENSAJE -->
+    <div class="fecha" id="fecha"></div>
+
+    <div class="divider"></div>
+
+    <div class="rating-text">Gracias por tu experiencia</div>
+    <div class="stars">★ ★ ★ ★ ★</div>
+  </div>
+
+  <script>
+  // Obtener fecha y hora actual
+  const fecha = new Date();
+  const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  const hora = fecha.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' });
+  const fechaFormateada = fecha.toLocaleDateString('es-PE', opciones);
+  document.getElementById('fecha').textContent = `${fechaFormateada} - ${hora}`;
+</script>
+<script src="assets/js/AuthGuard.js"></script>
+</body>
+</html>
